@@ -1,0 +1,421 @@
+<head>
+    <head>
+        <meta charset="UTF-8"></meta>
+        <title>labeling</title>
+        <script src ="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <div><h1>라벨머쉰</h1>
+            <div id = "movingBtn">
+                <button id = "submitBtn">제출</button>
+                <button id = "goL">←</button>
+                <button id = "goR">→</button>
+                <button id = "goValL">↑</button>
+                <button id = "goValR">↓</button>
+                <button id = "labelingReset">리셋</button>
+            </div>
+        </div>
+        <div id = "selector">
+            <p id = "slt">SELECT</p>
+            <ul class = "unopened"><p class = "shape button">모양</p>
+                <li class="shape invisible" value = "1">1. 가로로 긴 직사각형</li>
+                <li class="shape invisible" value = "2">2. 정사각형</li>
+                <li class="shape invisible" value = "3">3. 세로로 긴 직사각형</li>
+                <li class="shape invisible" value = "4">4. 아래가 넓은 사다리꼴</li>
+                <li class="shape invisible" value = "5">5. 위가 넓은 사다리꼴</li>
+                <li class="shape invisible" value = "6">6. 누운 실린더형</li>
+                <li class="shape invisible" value = "7">7. 세워진 실린더형</li>
+                <li class="shape invisible" value = "8">8. 원</li>
+                <li class="shape invisible" value = "9">9. 잘린 원</li>
+                <li class="shape invisible" value = "10">10. 호보</li>
+                <li class="shape invisible" value = "11">11. 핑고</li>
+                <li class="shape invisible" value = "12">12. 버켓</li>
+                <li class="shape invisible" value = "0">13. 모루게쒀요</li>
+            </ul>
+            <ul class = "unopened"><p class = "strap button">스트랩모양</p>
+                <li class="strap invisible" value = "1">1. 토트</li>
+                <li class="strap invisible" value = "2">2. 숄더</li>
+                <li class="strap invisible" value = "3">3. 크로스</li>
+                <li class="strap invisible" value = "4">4. 끈이없음(클러치)</li>
+                <li class="strap invisible" value = "0">5. 모루게쑤어ㅠ</li>
+            </ul>
+            <ul class = "unopened"><p class = "opening_type button">여는 방법</p>
+                <li class="opening_type invisible" value = "1">1. 커버</li>
+                <li class="opening_type invisible" value = "2">2. 지퍼</li>
+                <li class="opening_type invisible" value = "3">3. 프레임</li>
+                <li class="opening_type invisible" value = "4">4. 자물쇠</li>
+                <li class="opening_type invisible" value = "5">5. 없음</li>
+                <li class="opening_type invisible" value = "0">6. 모르게쒀</li>
+            </ul>
+            <ul class = "unopened"><p class = "material button">재질</p>
+                <li class="material invisible" value = "1">1. 가죽</li>
+                <li class="material invisible" value = "2">2. 면(캔버스+스웨이드 포함)</li>
+                <li class="material invisible" value = "3">3. PVC</li>
+                <li class="material invisible" value = "4">4. 섬유질(나무, 마, 왕골)</li>
+                <li class="material invisible" value = "5">5. 플라스틱</li>
+                <li class="material invisible" value = "6">6. 털</li>
+                <li class="material invisible" value = "0">7. 몰라용</li>
+            </ul>
+            <ul class = "unopened"><p class = "color button">색깔</p>
+                <li class="color invisible" value = "1">1. Red</li>
+                <li class="color invisible" value = "2">2. Orange</li>
+                <li class="color invisible" value = "3">3. Yellow</li>
+                <li class="color invisible" value = "4">4. Green</li>
+                <li class="color invisible" value = "5">5. Blue</li>
+                <li class="color invisible" value = "6">6. Purple</li>
+                <li class="color invisible" value = "7">7. Pink</li>
+                <li class="color invisible" value = "8">8. Beige</li>
+                <li class="color invisible" value = "9">9. Brown</li>
+                <li class="color invisible" value = "10">10. White</li>
+                <li class="color invisible" value = "11">11. Black</li>
+                <li class="color invisible" value = "12">12. Grey</li>
+                <li class="color invisible" value = "13">13. 투명</li>
+            </ul>
+            <ul class = "unopened"><p class = "pattern button">패턴</p>
+                <li class="pattern invisible" value = "1">1. 가죽패턴</li>
+                <li class="pattern invisible" value = "2">2. 체크무늬</li>
+                <li class="pattern invisible" value = "3">3. 퀼팅</li>
+                <li class="pattern invisible" value = "4">4. 스트라이프</li>
+                <li class="pattern invisible" value = "5">5. 패턴(글씨, 도트)</li>
+                <li class="pattern invisible" value = "6">6. 꽃무늬</li>
+                <li class="pattern invisible" value = "0">7. 기타(스트라이프 등)</li>
+                <li class="pattern invisible" value = "99">8. nothing</li>
+            </ul>
+            <ul class = "unopened"><p class = "decoration button">데코레이션</p>
+                <li class="decoration invisible" value = "1">1. 구슬</li>
+                <li class="decoration invisible" value = "2">2. 로고, 심볼</li>
+                <li class="decoration invisible" value = "3">3. 지퍼데코레이션</li>
+                <li class="decoration invisible" value = "4">4. 프린팅 데코</li>
+                <li class="decoration invisible" value = "5">5. 벨트데코</li>
+                <li class="decoration invisible" value = "6">6. 포켓 데코</li>
+                <li class="decoration invisible" value = "0">7. 기타</li>
+                <li class="decoration invisible" value = "99">8. nothing</li>
+            </ul>
+            <ul class = "unopened"><p class = "handle button">손잡이</p>
+                <li class="handle invisible" value = "1">1. 링</li>
+                <li class="handle invisible" value = "2">2. 얇은 가죽손잡이</li>
+                <li class="handle invisible" value = "3">3. 두꺼운 손잡이</li>
+                <li class="handle invisible" value = "4">4. 체인</li>
+                <li class="handle invisible" value = "0">5. 기타</li>
+                <li class="handle invisible" value = "99">6. nothing</li>
+            </ul>
+        </div>
+        <div id = "tags">
+            <p class = "tags" id = 'shape'></p>
+            <p class = "tags" id = 'strap'></p>
+            <p class = "tags" id = 'opening_type'></p>
+            <p class = "tags" id = 'material'></p>
+            <p class = "tags" id = 'color'></p>
+            <p class = "tags" id = 'pattern'></p>
+            <p class = "tags" id = 'decoration'></p>
+            <p class = "tags" id = 'handle'></p>
+        </div>
+        <div id = "wrapper">
+            <canvas class="canvas"></canvas>
+        </div>
+    </body>
+    <script>
+        //page load setting
+        let userdata = {};
+        $(document).ready(function(){
+            let id = window.localStorage.getItem("labeling_image_id");
+            $.ajax({
+                method : "GET",
+                url : `http://15.164.101.147:7989/api/labeling/${id}`,
+                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    userdata = data;
+                    console.log(userdata);
+                    newImage();
+                }
+            });
+        });
+
+        //show list when click label
+        $("p.button").on("click", function(event){
+            let father = event.target.parentElement;
+            let children = father.children;
+            invisibleControl(father);
+        })
+
+        //change color when selected
+        let submitData ={};
+        let categories = $("p.button");
+        for(i=0;i<categories.length;i++){
+            submitData[categories[i].classList[0]] = null;
+        }
+        $("li").on("click",function(event){
+            let father = event.target.parentElement;
+            for(i=1;i<father.children.length;i++){
+                if(father.children[i].classList[1]==="checked"){
+                    father.children[i].classList.remove("checked");
+                }
+            }
+            event.target.classList.add("checked");
+            let value = event.target.value;
+            submitData[`${event.target.classList[0]}`]=value;
+            invisibleControl(event.target.parentElement);
+            if(event.target.parentElement.nextElementSibling !== null){
+                invisibleControl(event.target.parentElement.nextElementSibling);
+            }
+            $(`p#${event.target.classList[0]}`).text(event.target.innerHTML);
+        });
+        function invisibleControl(father){//ul element
+            let children = father.children;
+            if(father.classList[0] === "opened"){
+                for(i=1;i<children.length;i++){
+                    children[i].classList.add("invisible");
+                }
+                father.classList.remove("opened");
+                father.classList.add("unopened");
+            }else if(father.classList[0] === "unopened"){
+                for(i=1;i<children.length;i++){
+                    children[i].classList.remove("invisible");
+                }
+                father.classList.remove("unopened");
+                father.classList.add("opened");
+            }
+        }
+        //image 띄우기
+        const canvas = document.querySelector("canvas");
+        canvas.width = 500;
+        const ctx = canvas.getContext("2d");
+        let originImage;
+        function deleteTag(){
+            for(key in submitData){
+                $(`p#${key}`).text('');
+            }
+        }
+        function newImage(){
+            originImage = new Image();
+            originImage.src = userdata.image_url;
+            originImage.onload = function(){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                canvas.height = canvas.width * (originImage.height / originImage.width);
+                originImage.width = canvas.width;
+                ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                $(`li`).removeClass("checked");
+                if(userdata.label_info === null){
+                    deleteTag();
+                    for(key in submitData){
+                        submitData[key] = null;
+                    }
+                }else{
+                    submitData = userdata.label_info;
+                    for(key in userdata.label_info){
+                        $(`li.${key}[value='${userdata.label_info[key]}']`).addClass("checked");
+                        $(`p#${key}`).text($(`li.${key}[value='${userdata.label_info[key]}']`).text());
+                    }
+                }
+            }
+        }
+        //제출
+        function onSubmit(){
+            let okToSend = true;
+            for(key in submitData){
+                if(submitData[key]===null){
+                    okToSend = false;
+                }
+            }
+            if(okToSend){
+                if(userdata.label_info === null){
+                    $.ajax({
+                        method : "POST",
+                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                        data : submitData,
+                        success : function(res){
+                            $.ajax({
+                                mothod : "GET",
+                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                                    newImage();
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    $.ajax({
+                        method : "PUT",
+                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                        data : submitData,
+                        success : function(res){
+                            $.ajax({
+                                mothod : "GET",
+                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                                    newImage();
+                                }
+                            })
+                        }
+                    })
+                }
+            }else{
+                window.alert("모든항목을 선택해주세요!");
+            }
+            
+        }
+        function prevImg(){
+            if(userdata.prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        function nextImg(){
+            if(userdata.next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        function nextValidImg(){
+            if(userdata.valid_next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goRUnboxed").on("click", nextValidImg);
+
+        function prevValidImg(){
+            if(userdata.valid_prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goLUnboxed").on("click", prevValidImg);
+
+        //삭제기능구현
+        function deleteImg(){
+            $.ajax({
+                method : "POST",
+                url : `http://15.164.101.147:7989/api/cropimage/delete/${userdata.id}`,
+                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                success : function(){
+                    if(userdata.next_id === null){
+                        prevImg();
+                    }else{
+                        nextImg();
+                    }
+                }
+            })
+        }
+        function resetLabel(){
+            for(key in submitData){
+                if(submitData[key] !== null){
+                    $(`li.${key}[value='${submitData[key]}']`).removeClass("checked");
+                    $(`p#${key}`).text("");
+                }
+                submitData[key] = null;
+            }
+
+        }
+        $("#submitBtn").on("click", onSubmit);
+        $("#goL").on("click", prevImg);
+        $("#goR").on("click", nextImg);
+        $("#goValL").on("click", prevValidImg);
+        $("#goValR").on("click", nextValidImg);
+        $("#labelingReset").on("click", resetLabel);
+
+        $(document).on("keyup", function(){
+            if(event.which === 13){
+                onSubmit();
+            }else if(event.which === 37){
+                prevImg();
+            }else if(event.which === 39){
+                nextImg();
+            }else if(event.which === 40){
+                nextValidImg();
+            }else if(event.which === 38){
+                prevValidImg();
+            }else if(event.which === 46){
+                deleteImg();
+            }
+        })
+        $("canvas").on("click",function(){
+            window.localStorage.setItem("boxing_image_id",userdata.origin_id);
+            window.location.href = "/boxingpage";
+        })
+    </script>
+    <style>
+        .invisible{
+            display : none;
+        }
+        .checked{
+            color : red;
+        }
+        #selector{
+            position: absolute;
+            left : 800px;
+            top: 100px;
+            border:2px solid black;
+            border-radius: 20px;
+        }
+        #tags{
+            position: absolute;
+            left:50px;
+            top: 80px;
+        }
+        #wrapper{
+            position: absolute;
+            left:50px;
+            top : 300px;
+        }
+        #slt{
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size : 40px;
+        }
+        h1{
+            margin : 0;
+        }
+        #movingBtn{
+            height : 20px;
+        }
+        .tags{
+            margin : 0;
+        }
+    </style>
+</head>

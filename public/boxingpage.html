@@ -1,0 +1,547 @@
+<html>
+    <head>
+        <meta charset="UTF-8"></meta>
+        <title>boxing</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <h1>박스박스</h1>
+        <div id = "buttons">
+            <button id = "submit">제출</button>
+            <br/>
+            <br/>
+            <button id = "goLUnboxed">↑</button>
+            <button id = "goL">←</button><button id = "goR">→</button>
+            <button id = "goRUnboxed">↓</button>
+            <p>← : 왼쪽사진으로 이동하기
+            </br>→ : 오른쪽사진으로 이동하기
+            </br>↑ : 이전 작업안된 사진으로 이동하기
+            </br>↑ : 이후 작업안된 사진으로 이동하기
+            </br>Enter : 작업완료, 수정 후 제출하기
+            </br>Delete : 이미지가 없는 사진 삭제하기 
+            </p>
+            <p id="imageId"></p>
+        </div>
+        <!-- <div id = "user">
+            <p id="usernameSpace"><span id="username"></span></p>
+            <p id="workedSpace">작업량 : <span id = "count1"></span>/100</p>
+        </div> -->
+        <div class = "wrapper">
+            <canvas class="canvas"></canvas>
+        </div>
+    </body>
+    <style type="text/css">
+    /* 1 */
+        .canvas{
+            border-style : solid;
+        }
+        #buttons{
+            /* 위치 나중에 수정! */
+            position: absolute;
+            top : 100px;
+            right : 50px;
+        }
+        #user{
+            position: relative;
+            left : 500px;
+            top : 30px;
+            border-style :groove;
+            width : 300px;
+            text-align: center;
+        }
+        /* body{
+            position: absolute;
+            top : 5px;
+            left : 5px;
+        } */
+        .wrapper{
+            position: relative;
+            top : 30px;
+        }
+        h1{
+            text-align: center;
+        }
+    </style>
+    <script>
+        //페이지 세팅(이름 작업량 사진받기 등등..)
+        let userdata = {};
+        $(document).ready(function(){
+            let imageId = window.localStorage.getItem("boxing_image_id");
+            $.ajax({
+                method : "GET",
+                url : `http://15.164.101.147:7989/api/boxing/${imageId}`,
+                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    userdata = data;
+                    console.log(userdata);
+                    newImage();
+                }
+            });
+        });
+        
+        //data전송 삭제 보류 이동 기능 구현
+        function getLTRB(rectCoordinate){
+            let ltrb=[];
+            if(rectCoordinate.x1 === null){
+                ltrb = [null,null,null,null];
+            }else{
+                let l = (rectCoordinate.x1-getOffsetX())/originImage.width;
+                let t = (rectCoordinate.y1-getOffsetY())/originImage.height;
+                let r = (rectCoordinate.x2-getOffsetX())/originImage.width;
+                let b = (rectCoordinate.y2-getOffsetY())/originImage.height;
+                ltrb = [l,t,r,b];
+            }
+            
+            return ltrb;
+        }
+        function ltrbToRec(ltrb,img){
+            let rec = {};
+            rec.x1 = ltrb.left * img.width + getOffsetX();
+            rec.y1 = ltrb.top * img.height + getOffsetY();
+            rec.x2 = ltrb.right * img.width + getOffsetX();
+            rec.y2 = ltrb.bottom * img.height + getOffsetY();
+            return rec;
+        }
+        function onSubmit(){//for pressing Enter
+            let ltrb = getLTRB(rectCoordinate);
+            if(userdata.box_info ===null){
+                $.ajax({
+                    method : "POST",
+                    url : `http://15.164.101.147:7989/api/box/${userdata.id}`,
+                    data : {
+                        left : ltrb[0],
+                        top : ltrb[1],
+                        right : ltrb[2],
+                        bottom : ltrb[3]
+                    },
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    // contentType : "application/json",
+                    // dataType : "application/json",
+                    success : function(){
+                        if(userdata.next_id === null){
+                            window.alert("끝남!");
+                        }else{
+                            $.ajax({
+                                method : "GET",
+                                url : `http://15.164.101.147:7989/api/boxing/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    if(userdata.box_info===null){
+                                        newImage();
+                                    }else{
+                                        newImage();
+                                        let tempR = ltrbToRec(userdata.box_info,originImage);
+                                        drawRect(tempR);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }else{
+                $.ajax({
+                    method : "PUT",
+                    url : `http://15.164.101.147:7989/api/box/${userdata.id}`,
+                    data : {
+                        left : ltrb[0],
+                        top : ltrb[1],
+                        right : ltrb[2],
+                        bottom : ltrb[3]
+                    },
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    // contentType : "application/json",
+                    // dataType : "application/json",
+                    success : function(){
+                        if(userdata.next_id === null){
+                            window.alert("끝남!");
+                        }else{
+                            $.ajax({
+                                method : "GET",
+                                url : `http://15.164.101.147:7989/api/boxing/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    if(userdata.box_info===null){
+                                        newImage();
+                                    }else{
+                                        newImage();
+                                        let tempR = ltrbToRec(userdata.box_info,originImage);
+                                        drawRect(tempR);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        $("#submit").on("click", onSubmit);
+
+        //왼쪽 오른쪽 버튼 구현
+        function prevImg(){
+            if(userdata.prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/boxing/${userdata.prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        console.log(data);
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goL").on("click",prevImg);
+
+        function nextImg(){
+            if(userdata.next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/boxing/${userdata.next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        console.log(data);
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goR").on("click", nextImg);
+
+        function nextValidImg(){
+            if(userdata.valid_next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/boxing/${userdata.valid_next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goRUnboxed").on("click", nextValidImg);
+
+        function prevValidImg(){
+            if(userdata.valid_prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/boxing/${userdata.valid_prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goLUnboxed").on("click", prevValidImg);
+
+        //삭제기능구현
+        function deleteImg(){
+            $.ajax({
+                method : "POST",
+                url : `http://15.164.101.147:7989/api/image/delete/${userdata.id}`,
+                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                success : function(){
+                    if(userdata.next_id === null){
+                        prevImg();
+                    }else{
+                        nextImg();
+                    }
+                }
+            })
+        }
+        //엔터 오른쪽 왼쪽 키누름 구현
+        $(document).on("keyup",function(event){
+            if(event.which === 13){
+                onSubmit();
+            }else if(event.which === 37){
+                prevImg();
+            }else if(event.which === 39){
+                nextImg();
+            }else if(event.which === 40){
+                nextValidImg();
+            }else if(event.which === 38){
+                prevValidImg();
+            }else if(event.which === 46){
+                deleteImg();
+            }
+        })
+        //canvas 작업 구현
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+        let originImage ;
+        const rectCoordinate = {
+            x1 : null,
+            y1 : null,
+            x2 : null,
+            y2 : null
+        }; 
+        let alreadyRect = false;
+        let startP = {
+            x : null,
+            y : null
+        };
+        let nowDrawing = false;
+        let nowResizing = false;
+        let nowMoving = false;
+        function ptInRect(p, r) {
+            return (p.x >= r.x1 &&
+                    p.x <= r.x2 &&
+                    p.y >= r.y1 &&
+                    p.y <= r.y2);
+        }
+        function getOffsetX(){
+            return canvas.getBoundingClientRect().left + window.scrollX;
+        }
+        function getOffsetY() {
+            return canvas.getBoundingClientRect().top + window.scrollY;
+        }
+        /*function pageToRelative(pageX, pageY) {
+            var x = (pageX - getOffsetX()) / canvas.width;
+            var y = (pageY - getOffsetY()) / canvas.height;
+            return {x: x, y: y};
+        }
+
+        function relativeToPage(relX, relY) {
+            var x = (relX * canvas.width) + getOffsetX();
+            var y = (relY * canvas.height) + getOffsetY();
+            return {x: x, y: y};
+        }*/
+        function drawRect(rect) {
+            // Draw rectangle
+            var x = rect.x1 - getOffsetX();//in canvas coordinate system
+            var y = rect.y1 - getOffsetY();
+            var w = rect.x2 - rect.x1;//width
+            var h = rect.y2 - rect.y1;//height
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(x, y, w, h);
+        }
+        function drawAll(rect){
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+            drawRect(rect);
+        }
+        function mouseMove(event){
+            if(nowDrawing){
+                let tempP = {
+                    x : event.pageX,
+                    y : event.pageY
+                };
+                let tempRect = {
+                    x1 : rectCoordinate.x1,
+                    y1 : rectCoordinate.y1,
+                    x2 : tempP.x,
+                    y2 : tempP.y
+                };
+                drawAll(tempRect);
+            }else if(nowResizing){
+                let tempP = {
+                    x : event.pageX,
+                    y : event.pageY
+                };
+                let tempRect = {
+                    x1 : rectCoordinate.x1,
+                    y1 : rectCoordinate.y1,
+                    x2 : tempP.x,
+                    y2 : tempP.y
+                };
+                drawAll(tempRect);
+            }else if(nowMoving){
+                let tempP = {
+                    x : event.pageX,
+                    y : event.pageY
+                };
+                let deltaP = {
+                    x : startP.x - tempP.x,
+                    y : startP.y - tempP.y
+                }
+                let tempRect = {
+                    x1 : rectCoordinate.x1 - deltaP.x,
+                    y1 : rectCoordinate.y1 - deltaP.y,
+                    x2 : rectCoordinate.x2 - deltaP.x,
+                    y2 : rectCoordinate.y2 - deltaP.y
+                };
+                drawAll(tempRect);
+            }
+        }
+        function mouseDown(event){
+            event.preventDefault();
+            if(event.which === 1){
+                if(alreadyRect === false){
+                    nowDrawing = true;
+                    rectCoordinate.x1 = event.pageX;
+                    rectCoordinate.y1 = event.pageY;
+                }else{//네모움직이기 + resize
+                    let tempP = {};
+                    tempP.x = event.pageX;
+                    tempP.y = event.pageY;
+                    let distance = Math.hypot(tempP.x - rectCoordinate.x2, tempP.y - rectCoordinate.y2);
+                    if(distance < Math.min(canvas.width /3, canvas.height / 3, 10)){
+                        console.log("resize");
+                        nowResizing = true;
+                        startP.x = tempP.x;
+                        startP.y = tempP.y;
+                        nowResizing = true;
+                    }else{
+                        if(ptInRect(tempP, rectCoordinate)){
+                            console.log("move");
+                            nowMoving = true;
+                            startP.x = tempP.x;
+                            startP.y = tempP.y;
+                            nowMoving = true;
+                        }
+                    }
+                }
+            }
+            
+        }
+        function mouseUp(event){
+            event.preventDefault();
+            if(event.which === 1){
+                if(alreadyRect===false){
+                    rectCoordinate.x2 = event.pageX;
+                    rectCoordinate.y2 = event.pageY;
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                    drawRect(rectCoordinate);
+                    alreadyRect = true;
+                    if(rectCoordinate.x1 >= rectCoordinate.x2 || rectCoordinate.y1 >= rectCoordinate.y2){
+                        window.alert("우측 상단에서 좌측 하단으로 그려주세요");
+                        cancle();
+                        ctx.clearRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                        alreadyRect = false;
+                    }
+                    nowDrawing = false;
+                }else{
+                    if(nowResizing === true){
+                        let endP = {
+                            x : event.pageX,
+                            y : event.pageY
+                        }
+                        let delta = {
+                            x : startP.x - endP.x,
+                            y : startP.y - endP.y
+                        }
+                        let tempX2 = {
+                            x : rectCoordinate.x2 - delta.x,
+                            y : rectCoordinate.y2 - delta.y
+                        }
+                        if(rectCoordinate.x1 >= tempX2.x || rectCoordinate.y1 >= tempX2.y){
+                            window.alert("우측 상단에서 좌측 하단으로 그려주세요");
+                            drawAll(rectCoordinate);
+                            nowResizing = false;
+                        }else{
+                            rectCoordinate.x2 -= delta.x;
+                            rectCoordinate.y2 -= delta.y;
+                            drawAll(rectCoordinate);  
+                            nowResizing = false;
+                        }
+                    }else if(nowMoving === true){
+                        let endP = {
+                            x : event.pageX,
+                            y : event.pageY
+                        }
+                        let delta = {
+                            x : startP.x - endP.x,
+                            y : startP.y - endP.y
+                        }
+                        rectCoordinate.x1 -= delta.x;
+                        rectCoordinate.y1 -= delta.y;
+                        rectCoordinate.x2 -= delta.x;
+                        rectCoordinate.y2 -= delta.y;
+                        drawAll(rectCoordinate);
+                        nowMoving = false;
+                    }
+                }
+            }
+        }
+        function cancle(){//우클릭시 선택 취소
+            event.preventDefault();
+            alreadyRect = false;
+            startP.x = 0;
+            startP.y = 0;
+            nowDrawing, nowMoving, nowResizing = false;
+            rectCoordinate.x1=null;
+            rectCoordinate.y1=null;
+            rectCoordinate.x2=null;
+            rectCoordinate.y2=null;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+        }
+        function newImage(){
+            window.localStorage.setItem("boxing_image_id", userdata.id);
+            originImage = new Image();
+            let testImage = new Image();
+            testImage.onload = function(){
+                originImage.src = testImage.src;
+                originImage.onload = function(){
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    canvas.width = originImage.width;
+                    canvas.height = originImage.height;
+                    ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                    $("#imageId").text(`${userdata.id}`);
+                    if(userdata.box_info === null){
+                        for(key in rectCoordinate){
+                            rectCoordinate[key]=null;
+                            alreadyRect = false;
+                        }
+                    }else{
+                        let tempR = ltrbToRec(userdata.box_info,originImage);
+                        for(key in tempR){
+                            rectCoordinate[key] = tempR[key];
+                        }
+                        drawRect(rectCoordinate);
+                        alreadyRect = true;
+                    }
+                }
+            };
+            testImage.onerror = function(){
+                originImage.src = './images.png';
+                originImage.onload = function(){
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    canvas.width = originImage.width;
+                    canvas.height = originImage.height;
+                    ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                    $("#imageId").text(`${userdata.id}`);
+                    if(userdata.box_info === null){
+                        for(key in rectCoordinate){
+                            rectCoordinate[key]=null;
+                        }
+                    }else{
+                        let tempR = ltrbToRec(userdata.box_info,originImage);
+                        for(key in tempR){
+                            rectCoordinate[key] = tempR[key];
+                        }
+                        drawRect(rectCoordinate);
+                        alreadyRect = true;
+                    }
+                }
+            }
+            if(userdata.image_url.includes("http")){
+                testImage.src = userdata.image_url;
+            }else{
+                testImage.src = "http://"+ userdata.image_url;
+            }
+        }
+        canvas.addEventListener("mousedown", mouseDown);
+        canvas.addEventListener("mouseup", mouseUp);
+        canvas.addEventListener("contextmenu", cancle);
+        canvas.addEventListener("mousemove",mouseMove);
+    </script>
+</html>

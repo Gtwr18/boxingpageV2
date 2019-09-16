@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <!-- <meta id = "_crsf" name="crsf" th:content="${_csrf.token}"/>
+        <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/> -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <title>homepage</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div id="userInfo">
+            <p><span id="username"></span>  
+            </br>
+            박싱 총작업량 :<span id="total_boxing_worked_count"></span>
+            </br>
+            라벨링 총작업량 :<span id = "total_labeling_worked_count"></span>
+            </p>
+            <button id="logout">logout</button>
+        </div>
+        <div class = "a" id="boxing">
+            <button id="boxingBtn">boxing</button>
+            <p>작업량 : <span id="boxing_worked_count"></span>/<span id="boxing_assigned_count"></span></p>
+            <button id="boxingAssignBtn">할당받기</button>
+        </div>
+        <div class = "a" id="labeling">
+            <button id="labelingBtn">labeling</button>
+            <p>작업량 : <span id="labeling_worked_count"></span>/<span id="labeling_assigned_count"></span></p>
+            <button id="labelingAssignBtn">할당받기</button>
+        </div>
+    </body>
+    <script>
+        let userdata={};
+        //세팅페이지
+        // function setPage(data, key){
+        //     $(document).ready
+        // }
+        $(document).ready(function(){
+            console.log("logged");
+            $.ajax({
+                method : "GET",
+                url : "http://15.164.101.147:7989/api/home",
+                headers: {"Authorization": 'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    userdata = data;
+                    window.localStorage.setItem("boxing_image_id", userdata.boxing_image_id);
+                    window.localStorage.setItem("labeling_image_id", userdata.labeling_image_id);
+                    for(key in userdata){
+                        if(key.includes('count')){
+                            $(`#${key}`).text(userdata[key]);
+                        }
+                    }
+                    $(`#username`).text(userdata.username);
+                }
+
+            })
+        });
+        $("#boxingBtn").on('mouseup',function(){
+           window.location.href="/boxingpage";
+        });
+        $("#boxingAssignBtn").on('mouseup',function(){
+            $.ajax({
+                method : "POST",
+                url : "http://15.164.101.147:7989/api/boxing/assign",
+                headers: {"Authorization": 'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    window.location.href = "/homepage";
+                }
+            });
+        });
+        $("#labelingBtn").on("mouseup", function(){
+            console.log("!");
+            window.location.href="/labelingpage";
+        })
+        $("#labelingAssignBtn").on('mouseup',function(){
+            $.ajax({
+                method : "POST",
+                url : "http://15.164.101.147:7989/api/labeling/assign",
+                headers: {"Authorization": 'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    window.location.href = "/homepage";
+                }
+            });
+        });
+    </script>
+    <style>
+        #userInfo{
+            text-align: right;
+            position: fixed;
+            top : 20px;
+            right : 400px;
+        }
+        .a{
+            margin : 20px;
+            padding : 5px;
+            width : 200px;
+            border : 2px solid black;
+            border-radius: 10px;
+            position : relative;
+            left : 100px;
+            background-color: white;
+        }
+        body{
+            background-color: rgb(243, 144, 243);
+        }
+    </style>
+</html>

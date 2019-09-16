@@ -1,0 +1,26 @@
+{
+  "name": "boxingpage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "boxingPage.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-ipfilter": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gtwr18/boxingPage_front.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gtwr18/boxingPage_front/issues"
+  },
+  "homepage": "https://github.com/Gtwr18/boxingPage_front#readme"
+}

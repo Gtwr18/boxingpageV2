@@ -1,0 +1,304 @@
+<head>
+    <head>
+        <meta charset="UTF-8"></meta>
+        <title>labeling_Deco</title>
+        <script src ="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <div><h1>Deco :<span></span></h1>
+            <div id = "movingBtn">
+                <button id = "submitBtn">제출</button>
+                <button id = "goL">←</button>
+                <button id = "goR">→</button>
+                <button id = "goValL">↑</button>
+                <button id = "goValR">↓</button>
+            </div>
+        </div>
+        <div id="categories">
+                <p class="shape" value="1"><img  height = "30px">1. bling(비즈 & 큐빅)</p>
+                <p class="shape" value="2"><img  height = "30px">2. lock(자물쇠)</p>
+                <p class="shape" value="3"><img  height = "30px">3. lettering & printing</p>
+                <p class="shape" value="0"><img  height = "30px">4. 기타</p>
+                <p class="shape" value="99"><img  height = "30px">5. none</p>
+        </div>
+        <div id = "wrapper">
+            <canvas class="canvas"></canvas>
+        </div>
+    </body>
+    <script>
+        //page load setting
+        let userdata = {};
+        $(document).ready(function(){
+            let id = window.localStorage.getItem("labeling_image_id");
+            $.ajax({
+                method : "GET",
+                url : `http://15.164.101.147:7989/api/labeling/${id}`,
+                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    userdata = data;
+                    console.log(userdata);
+                    newImage();
+                    headLabel(userdata.shape_label_info);
+                }
+            });
+        });
+        //image 띄우기
+        const canvas = document.querySelector("canvas");
+        canvas.width = 500;
+        const ctx = canvas.getContext("2d");
+        let originImage;
+        function newImage(){
+            originImage = new Image();
+            originImage.src = userdata.image_url;
+            originImage.onload = function(){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                canvas.height = canvas.width * (originImage.height / originImage.width);
+                originImage.width = canvas.width;
+                ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
+                if(userdata.label_info === null){
+                        submitData = null;
+                }else{
+                    submitData = userdata.label_info;
+                }
+            }
+        }
+        //제출//여기수정필요!!!!!!!
+        //!!!!!!!!!!!
+        //!!!!!!!
+        function onSubmit(){
+            let okToSend = true;
+            if(submitData===null){
+                okToSend = false;
+            }
+            if(okToSend){
+                if(userdata.label_info === null){
+                    $.ajax({
+                        method : "POST",
+                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                        data : submitData,
+                        success : function(res){
+                            $.ajax({
+                                mothod : "GET",
+                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                                    newImage();
+                                    headLabel(userdata.shape_label_info);
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    $.ajax({
+                        method : "PUT",
+                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                        data : submitData,
+                        success : function(res){
+                            $.ajax({
+                                mothod : "GET",
+                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                                success : function(data){
+                                    userdata = data;
+                                    window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                                    newImage();
+                                    headLabel(userdata.shape_label_info);
+                                }
+                            })
+                        }
+                    })
+                }
+            }else{
+                window.alert("항목을 선택해주세요!");
+            }
+            
+        }
+        function prevImg(){
+            if(userdata.prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                        newImage();
+                        headLabel(userdata.shape_label_info);
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        function nextImg(){
+            if(userdata.next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
+                        newImage();
+                        headLabel(userdata.shape_label_info);
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        function nextValidImg(){
+            if(userdata.valid_next_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_next_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                        headLabel(userdata.shape_label_info);
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        $("#goRUnboxed").on("click", nextValidImg);
+
+        function prevValidImg(){
+            if(userdata.valid_prev_id !== null){
+                $.ajax({
+                    method : "GET",
+                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_prev_id}`,
+                    headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
+                    success : function(data){
+                        userdata = data;
+                        newImage();
+                        headLabel(userdata.shape_label_info);
+                    }
+                });
+            }else{
+                window.alert("끝임!");
+            }
+        }
+        //삭제기능구현
+        $("#submitBtn").on("click", onSubmit);
+        $("#goL").on("click", prevImg);
+        $("#goR").on("click", nextImg);
+        $("#goValL").on("click", prevValidImg);
+        $("#goValR").on("click", nextValidImg);
+
+        $(document).on("keyup", function(){
+            if(event.which === 13){
+                onSubmit();
+            }else if(event.which === 37){
+                prevImg();
+            }else if(event.which === 39){
+                nextImg();
+            }else if(event.which === 40){
+                nextValidImg();
+            }else if(event.which === 38){
+                prevValidImg();
+            }
+        })
+        $("canvas").on("click",function(){
+            window.localStorage.setItem("boxing_image_id",userdata.origin_id);
+            window.location.href = "/boxingpage";
+        })
+        //change color when hover
+        $(".shape").hover(function(e){
+            e.target.classList.add("onHover")
+        },function(e){
+            e.target.classList.remove("onHover")
+        })
+        //click on select
+        //change color when selected
+        let submitData;
+        $(".shape").on("click",function(e){
+            submitData = e.target.attributes[1].value;
+            headLabel(submitData);
+            if($(".onSelected").length != 0){
+                $(".onSelected").removeClass("onSelected")
+            }
+            e.target.classList.add("onSelected");
+        })
+        function headLabel(label){
+            if(label === null){//되나안되나 확인필요
+                $("span").addClass("nullCategory");
+            }else{
+                var head = $(`.shape[value=${label}]`).text();
+                if($("span").hasClass("nullCategory")){
+                    $("span").removeClass("nullCategory");
+                }
+                $("span").text(head);
+            }
+        }
+    </script>
+    <style>
+        .invisible{
+            display : none;
+        }
+        .checked{
+            color : red;
+        }
+        #selector{
+            position: absolute;
+            left : 800px;
+            top: 100px;
+            border:2px solid black;
+            border-radius: 20px;
+        }
+        #tags{
+            position: absolute;
+            left:50px;
+            top: 80px;
+        }
+        #wrapper{
+            position: absolute;
+            left:400px;
+            top : 100px;
+        }
+        #slt{
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size : 40px;
+        }
+        h1{
+            margin : 0;
+        }
+        #movingBtn{
+            height : 20px;
+        }
+        .tags{
+            margin : 0;
+        }
+        .shape{
+            line-height: 50px;
+            height: 50px;
+        }
+        img{
+            vertical-align: middle;
+            margin-left : 20px;
+            margin-right : 20px;
+        }
+        #categories{
+            width : 300px;
+        }
+        .onHover{
+            font-size : 20px;
+            font-weight: 700;
+            color : blue;
+        }
+        .onSelected{
+            font-size : 20px;
+            font-weight: 700;
+            color : red;
+        }
+        .nullCategory{
+            color : red;
+        }
+    </style>
+</head>
