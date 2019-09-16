@@ -16,16 +16,42 @@
             </p>
             <button id="logout">logout</button>
         </div>
-        <div class = "a" id="boxing">
+        <div class = "a B" id="boxing">
             <button id="boxingBtn">boxing</button>
             <p>작업량 : <span id="boxing_worked_count"></span>/<span id="boxing_assigned_count"></span></p>
             <button id="boxingAssignBtn">할당받기</button>
         </div>
-        <div class = "a" id="labeling">
-            <button id="labelingBtn">labeling</button>
-            <p>작업량 : <span id="labeling_worked_count"></span>/<span id="labeling_assigned_count"></span></p>
-            <button id="labelingAssignBtn">할당받기</button>
+        <div class = "a L" id="labelingpageShape"><!-- id 와 다음페이지 주소가 같게 만들어줌 -->
+            <button class="labelingBtn">shape labeling</button>
+            <p>작업량 : <span id="shape_labeling_worked_count"></span>/<span id="shape_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
         </div>
+        <div class = "a L" id="labelingpageColor">
+            <button class="labelingBtn">color labeling</button>
+            <p>작업량 : <span id="color_labeling_worked_count"></span>/<span id="color_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
+        </div>
+        <div class = "a L" id="labelingpageHandle">
+            <button class="labelingBtn">handle labeling</button>
+            <p>작업량 : <span id="handle_labeling_worked_count"></span>/<span id="handle_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
+        </div>
+        <div class = "a L" id="labelingpageCharm">
+            <button class="labelingBtn">charm labeling</button>
+            <p>작업량 : <span id="charm_labeling_worked_count"></span>/<span id="charm_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
+        </div>
+        <div class = "a L" id="labelingpagePattern">
+            <button class="labelingBtn">pattern labeling</button>
+            <p>작업량 : <span id="pattern_labeling_worked_count"></span>/<span id="pattern_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
+        </div>
+        <div class = "a L" id="labelingpageDeco">
+            <button class="labelingBtn">deco labeling</button>
+            <p>작업량 : <span id="deco_labeling_worked_count"></span>/<span id="deco_labeling_assigned_count"></span></p>
+            <button class="labelingAssignBtn">할당받기</button>
+        </div>
+
     </body>
     <script>
         let userdata={};
@@ -44,8 +70,11 @@
                     window.localStorage.setItem("boxing_image_id", userdata.boxing_image_id);
                     window.localStorage.setItem("labeling_image_id", userdata.labeling_image_id);
                     for(key in userdata){
-                        if(key.includes('count')){
+                        if(key.includes('count')){//span 의 id 를 서버로부터 오는 key 값과 동일하게 만들어야 동작!
                             $(`#${key}`).text(userdata[key]);
+                        }
+                        if(key.includes("id")){
+                            window.localStorage.setItem(key, userdata[key]);
                         }
                     }
                     $(`#username`).text(userdata.username);
@@ -66,9 +95,9 @@
                 }
             });
         });
-        $("#labelingBtn").on("mouseup", function(){
-            console.log("!");
-            window.location.href="/labelingpage";
+        $(".labelingBtn").on("mouseup",function(e){
+            var location = e.target.parentElement.id;
+            window.location.href=`/${location}`
         })
         $("#labelingAssignBtn").on('mouseup',function(){
             $.ajax({
@@ -80,6 +109,7 @@
                 }
             });
         });
+
     </script>
     <style>
         #userInfo{

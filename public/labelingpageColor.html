@@ -38,16 +38,16 @@
         //page load setting
         let userdata = {};
         $(document).ready(function(){
-            let id = window.localStorage.getItem("labeling_image_id");
+            let id = window.localStorage.getItem("color_labeling_image_id");
             $.ajax({
                 method : "GET",
-                url : `http://15.164.101.147:7989/api/labeling/${id}`,
+                url : `http://15.164.101.147:7989/api/colorlabeling/${id}`,
                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                 success : function(data){
                     userdata = data;
                     console.log(userdata);
                     newImage();
-                    headLabel(userdata.shape_label_info);
+                    headLabel(userdata.color_label_info);
                 }
             });
         });
@@ -83,19 +83,19 @@
                 if(userdata.label_info === null){
                     $.ajax({
                         method : "POST",
-                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        url : `http://15.164.101.147:7989/api/colorlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
                                     window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
                                     newImage();
-                                    headLabel(userdata.shape_label_info);
+                                    headLabel(userdata.color_label_info);
                                 }
                             })
                         }
@@ -103,19 +103,19 @@
                 }else{
                     $.ajax({
                         method : "PUT",
-                        url : `http://15.164.101.147:7989/api/label/${userdata.id}`,
+                        url : `http://15.164.101.147:7989/api/colorlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                                url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
                                     window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
                                     newImage();
-                                    headLabel(userdata.shape_label_info);
+                                    headLabel(userdata.color_label_info);
                                 }
                             })
                         }
@@ -130,13 +130,13 @@
             if(userdata.prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/labeling/${userdata.prev_id}`,
+                    url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
                         window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
                         newImage();
-                        headLabel(userdata.shape_label_info);
+                        headLabel(userdata.color_label_info);
                     }
                 });
             }else{
@@ -147,13 +147,13 @@
             if(userdata.next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/labeling/${userdata.next_id}`,
+                    url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
                         window.localStorage.setItem("labeling_image_id", userdata.valid_next_id);
                         newImage();
-                        headLabel(userdata.shape_label_info);
+                        headLabel(userdata.color_label_info);
                     }
                 });
             }else{
@@ -164,30 +164,29 @@
             if(userdata.valid_next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_next_id}`,
+                    url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.valid_next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
                         newImage();
-                        headLabel(userdata.shape_label_info);
+                        headLabel(userdata.color_label_info);
                     }
                 });
             }else{
                 window.alert("끝임!");
             }
         }
-        $("#goRUnboxed").on("click", nextValidImg);
 
         function prevValidImg(){
             if(userdata.valid_prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/labeling/${userdata.valid_prev_id}`,
+                    url : `http://15.164.101.147:7989/api/colorlabeling/${userdata.valid_prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
                         newImage();
-                        headLabel(userdata.shape_label_info);
+                        headLabel(userdata.color_label_info);
                     }
                 });
             }else{
