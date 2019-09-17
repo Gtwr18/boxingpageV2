@@ -99,7 +99,7 @@
             var location = e.target.parentElement.id;
             window.location.href=`/${location}`
         })
-        $("#labelingAssignBtn").on('mouseup',function(){
+        $(".labelingAssignBtn").on('mouseup',function(){
             $.ajax({
                 method : "POST",
                 url : "http://15.164.101.147:7989/api/labeling/assign",

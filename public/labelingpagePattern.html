@@ -61,10 +61,10 @@
                 canvas.height = canvas.width * (originImage.height / originImage.width);
                 originImage.width = canvas.width;
                 ctx.drawImage(originImage, 0 , 0, canvas.width, canvas.height);
-                if(userdata.label_info === null){
-                        submitData = null;
+                if(userdata.pattern_label_info === null){
+                        tempSubmitdata = null;
                 }else{
-                    submitData = userdata.label_info;
+                    tempSubmitdata = userdata.pattern_label_info;
                 }
             }
         }
@@ -73,11 +73,12 @@
         //!!!!!!!
         function onSubmit(){
             let okToSend = true;
-            if(submitData===null){
+            if(tempSubmitdata===null){
                 okToSend = false;
             }
             if(okToSend){
-                if(userdata.label_info === null){
+                submitData = {'pattern':tempSubmitdata};
+                if(userdata.pattern_label_info === null){
                     $.ajax({
                         method : "POST",
                         url : `http://15.164.101.147:7989/api/patternlabel/${userdata.id}`,
@@ -222,10 +223,11 @@
         })
         //click on select
         //change color when selected
+        let tempSubmitdata;
         let submitData;
         $(".shape").on("click",function(e){
-            submitData = e.target.attributes[1].value;
-            headLabel(submitData);
+            tempSubmitdata = e.target.attributes[1].value;
+            headLabel(tempSubmitdata);
             if($(".onSelected").length != 0){
                 $(".onSelected").removeClass("onSelected")
             }
@@ -234,6 +236,10 @@
         function headLabel(label){
             if(label === null){//되나안되나 확인필요
                 $("span").addClass("nullCategory");
+                $("span").text("");
+                if($("p.onSelected").length){
+                    $("p.onSelected").removeClass("onSelected");
+                }
             }else{
                 var head = $(`.shape[value=${label}]`).text();
                 if($("span").hasClass("nullCategory")){
