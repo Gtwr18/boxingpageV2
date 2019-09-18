@@ -1,0 +1,93 @@
+<head>
+    <head>
+        <meta charset="UTF-8"></meta>
+        <title>admin page</title>
+        <script src ="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+        class User{
+            constructor(x){
+                this.username = x.username;
+                this.charmC = x.charm_labeling_worked_count;
+                this.colorC = x.color_labeling_worked_count;
+                this.decoC = x.deco_labeling_worked_count;
+                this.handleC = x.handle_labeling_worked_count;
+                this.patternC = x.pattern_labeling_worked_count;
+                this.shapeC = x.shape_labeling_worked_count;
+                this.totalBoxingC = x.total_boxing_worked_count;
+                this.totalLabelingC = x.total_labeling_worked_count;
+            }
+            makeHtmlElement(){
+                var $div = $('<div class = "user"></div>');
+                var $div_detail = $('<div class = "user_detail"></div>')
+                var $div_total = $('<div class = "user_total"></div>')
+                var $username = $(`<h1>name : ${this.username}</h1>`);
+                var $p_shape = $(`<p>shape : ${this.shapeC}</p>`);
+                var $p_color = $(`<p>color : ${this.colorC}</p>`)
+                var $p_handle = $(`<p>handle : ${this.handleC}</p>`)
+                var $p_charm = $(`<p>charm : ${this.charmC}</p>`)
+                var $p_deco = $(`<p>deco : ${this.decoC}</p>`)
+                var $p_pattern = $(`<p>pattern : ${this.patternC}</p>`)
+                var $totalBoxingC = $(`<p class = "total">total boxing : ${this.totalBoxingC}</p>`)
+                var $totalLabelingC = $(`<p class = "total">total labeling : ${this.totalLabelingC}</p>`)
+                $div_detail.append($p_shape,$p_color,$p_handle,$p_charm,$p_deco,$p_pattern);
+                $div_total.append($totalBoxingC,$totalLabelingC);
+                $div.append($username,$div_detail,$div_total);
+                $('body').append($div);
+                // $("body").append(createElement("div",{
+                //     id : `${this.username}`,
+                //     css:{
+                //         'border' : '1px solid black',
+                //         'background-color' : 'yellow'
+                //     }
+                // }));
+                // $(`#${this.username}`).append(createElement('p'),{
+                    
+                // })
+            }
+        }
+        $.ajax({
+                method : "GET",
+                url : "http://15.164.101.147:7989/api/worker",
+                headers: {"Authorization": 'token '+ window.localStorage.getItem('token')},
+                success : function(data){
+                    console.log(data);
+                    for(key in data){
+                        var user = new User(data[key]);
+                        user.makeHtmlElement();
+                    }
+
+                }
+            });
+    </script>
+    <style>
+        body{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+        }
+        div.user{
+            border : 2px solid ;
+            border-radius: 2px;
+            font-size: 10px;
+            width : 300px;
+            text-align: center;
+            margin : 20px;
+        }
+        div.user_detail{
+            position: relative;
+            left : -80px;
+            top : 20px;
+        }
+        div.user_total{
+            position: relative;
+            left : 50px;
+            top : -100px;
+            font-size: 20px;
+        }
+    </style>
+</head>

@@ -12,6 +12,14 @@
                 <button id = "goR">→</button>
                 <button id = "goValL">↑</button>
                 <button id = "goValR">↓</button>
+                <p>← : 왼쪽사진으로 이동하기
+                </br>→ : 오른쪽사진으로 이동하기
+                </br>↑ : 이전 작업안된 사진으로 이동하기
+                </br>↑ : 이후 작업안된 사진으로 이동하기
+                </br>Enter : 작업완료, 수정 후 제출하기
+                </br>Delete : 이미지가 없는 사진 삭제하기 
+                </br>사진 클릭 : 다시 박스하러가기
+                </p>
             </div>
         </div>
         <div id="categories">
@@ -227,23 +235,30 @@
             }
             e.target.classList.add("onSelected");
         })
-        function headLabel(label){
-            if(label === null){//되나안되나 확인필요
-                $("span").addClass("nullCategory");
+        function headLabel(tlabel){
+            if(tlabel === null){//되나안되나 확인필요
+                $("h1").addClass("nullCategory");
                 $("span").text("");
                 if($("p.onSelected").length){
                     $("p.onSelected").removeClass("onSelected");
                 }
             }else{
+                var label = tlabel['handle']
                 var head = $(`.shape[value=${label}]`).text();
-                if($("span").hasClass("nullCategory")){
-                    $("span").removeClass("nullCategory");
+                if($("h1").hasClass("nullCategory")){
+                    $("h1").removeClass("nullCategory");
                 }
                 $("span").text(head);
             }
         }
     </script>
     <style>
+        #movingBtn{
+            /* 위치 나중에 수정! */
+            position: absolute;
+            top : 100px;
+            right : 50px;
+        }
         #wrapper{
             position: absolute;
             left:400px;

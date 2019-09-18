@@ -6,7 +6,7 @@
     </head>
     <body>
         <h1>박스박스</h1>
-        <div id = "buttons">
+        <div id = "movingBtn">
             <button id = "submit">제출</button>
             <br/>
             <br/>
@@ -19,6 +19,9 @@
             </br>↑ : 이후 작업안된 사진으로 이동하기
             </br>Enter : 작업완료, 수정 후 제출하기
             </br>Delete : 이미지가 없는 사진 삭제하기 
+            </br>우클릭 : 박스 삭제
+            </br>박스 내부클릭 : 이동
+            </br>박스 우측하단코너 클릭 : resize
             </p>
             <p id="imageId"></p>
         </div>
@@ -35,7 +38,7 @@
         .canvas{
             border-style : solid;
         }
-        #buttons{
+        #movingBtn{
             /* 위치 나중에 수정! */
             position: absolute;
             top : 100px;

@@ -71,8 +71,11 @@
           window.localStorage.setItem("token", res.token);
           window.location.href = "/homepage";
         }else{
-          console.log("no user");
+          window.alert("no user");
         }
+      },
+      error:function(){
+        window.alert("no user");
       }
     })
   }
@@ -98,11 +101,11 @@
           window.localStorage.setItem("token", res.token);
           window.location.href = "/homepage";
         }else{
-          console.log("no user");
+          window.alert("no user");
         }
       },
       error : function(){
-        window.alert("!!");
+        window.alert("이미회원가입됨");
       }
     })
   }
