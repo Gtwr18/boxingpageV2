@@ -42,7 +42,7 @@
             let id = window.localStorage.getItem("shape_labeling_image_id");
             $.ajax({
                 method : "GET",
-                url : `http://15.164.101.147:7989/api/shapelabeling/${id}`,
+                url : `http://18.218.238.197:7989/api/shapelabeling/${id}`,
                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                 success : function(data){
                     userdata = data;
@@ -85,13 +85,13 @@
                 if(userdata.shape_label_info === null){
                     $.ajax({
                         method : "POST",
-                        url : `http://15.164.101.147:7989/api/shapelabel/${userdata.id}`,
+                        url : `http://18.218.238.197:7989/api/shapelabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.next_id}`,
+                                url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -105,13 +105,13 @@
                 }else{
                     $.ajax({
                         method : "PUT",
-                        url : `http://15.164.101.147:7989/api/shapelabel/${userdata.id}`,
+                        url : `http://18.218.238.197:7989/api/shapelabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.next_id}`,
+                                url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -132,7 +132,7 @@
             if(userdata.prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.prev_id}`,
+                    url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -149,7 +149,7 @@
             if(userdata.next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.next_id}`,
+                    url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -166,7 +166,7 @@
             if(userdata.valid_next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.valid_next_id}`,
+                    url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.valid_next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -183,7 +183,7 @@
             if(userdata.valid_prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/shapelabeling/${userdata.valid_prev_id}`,
+                    url : `http://18.218.238.197:7989/api/shapelabeling/${userdata.valid_prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;

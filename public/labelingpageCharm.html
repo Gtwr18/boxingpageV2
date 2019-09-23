@@ -40,7 +40,7 @@
             let id = window.localStorage.getItem("charm_labeling_image_id");
             $.ajax({
                 method : "GET",
-                url : `http://15.164.101.147:7989/api/charmlabeling/${id}`,
+                url : `http://18.218.238.197:7989/api/charmlabeling/${id}`,
                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                 success : function(data){
                     userdata = data;
@@ -83,13 +83,13 @@
                 if(userdata.charm_label_info === null){
                     $.ajax({
                         method : "POST",
-                        url : `http://15.164.101.147:7989/api/charmlabel/${userdata.id}`,
+                        url : `http://18.218.238.197:7989/api/charmlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.next_id}`,
+                                url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -103,13 +103,13 @@
                 }else{
                     $.ajax({
                         method : "PUT",
-                        url : `http://15.164.101.147:7989/api/charmlabel/${userdata.id}`,
+                        url : `http://18.218.238.197:7989/api/charmlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.next_id}`,
+                                url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -130,7 +130,7 @@
             if(userdata.prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.prev_id}`,
+                    url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -147,7 +147,7 @@
             if(userdata.next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.next_id}`,
+                    url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -164,7 +164,7 @@
             if(userdata.valid_next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.valid_next_id}`,
+                    url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.valid_next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -181,7 +181,7 @@
             if(userdata.valid_prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://15.164.101.147:7989/api/charmlabeling/${userdata.valid_prev_id}`,
+                    url : `http://18.218.238.197:7989/api/charmlabeling/${userdata.valid_prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
