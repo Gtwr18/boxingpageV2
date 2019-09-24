@@ -46,7 +46,7 @@
             let id = window.localStorage.getItem("pattern_labeling_image_id");
             $.ajax({
                 method : "GET",
-                url : `http://18.218.238.197:7989/api/patternlabeling/${id}`,
+                url : `http://15.164.215.141:7989/api/patternlabeling/${id}`,
                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                 success : function(data){
                     userdata = data;
@@ -89,13 +89,13 @@
                 if(userdata.pattern_label_info === null){
                     $.ajax({
                         method : "POST",
-                        url : `http://18.218.238.197:7989/api/patternlabel/${userdata.id}`,
+                        url : `http://15.164.215.141:7989/api/patternlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.next_id}`,
+                                url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -109,13 +109,13 @@
                 }else{
                     $.ajax({
                         method : "PUT",
-                        url : `http://18.218.238.197:7989/api/patternlabel/${userdata.id}`,
+                        url : `http://15.164.215.141:7989/api/patternlabel/${userdata.id}`,
                         headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                         data : submitData,
                         success : function(res){
                             $.ajax({
                                 mothod : "GET",
-                                url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.next_id}`,
+                                url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.next_id}`,
                                 headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                                 success : function(data){
                                     userdata = data;
@@ -136,7 +136,7 @@
             if(userdata.prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.prev_id}`,
+                    url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -153,7 +153,7 @@
             if(userdata.next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.next_id}`,
+                    url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -170,7 +170,7 @@
             if(userdata.valid_next_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.valid_next_id}`,
+                    url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.valid_next_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
@@ -187,7 +187,7 @@
             if(userdata.valid_prev_id !== null){
                 $.ajax({
                     method : "GET",
-                    url : `http://18.218.238.197:7989/api/patternlabeling/${userdata.valid_prev_id}`,
+                    url : `http://15.164.215.141:7989/api/patternlabeling/${userdata.valid_prev_id}`,
                     headers : {"Authorization":'token '+ window.localStorage.getItem('token')},
                     success : function(data){
                         userdata = data;
