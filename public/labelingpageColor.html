@@ -88,7 +88,7 @@
                 okToSend = false;
             }
             if(okToSend){
-                submitData={'color':tempSubmitData};
+                submitData={'color':tempSubmitdata};
                 if(userdata.color_label_info === null){
                     $.ajax({
                         method : "POST",
@@ -235,7 +235,7 @@
         //click on select
         //change color when selected
         let submitData;
-        let tempSubmitData;
+        let tempSubmitdata;
         $(".shape").on("click",function(e){
             tempSubmitdata = e.target.attributes[1].value;
             headLabel(tempSubmitdata);
